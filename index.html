@@ -42,7 +42,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 2rem auto;
             padding: 0 1rem;
             display: grid;
@@ -50,7 +50,6 @@
             gap: 2rem;
         }
 
-        /* 側邊導覽列 */
         nav {
             position: sticky;
             top: 2rem;
@@ -89,7 +88,6 @@
             color: var(--accent-color);
         }
 
-        /* 主要內容區 */
         main {
             display: flex;
             flex-direction: column;
@@ -100,7 +98,7 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            padding: 2rem;
+            padding: 2.5rem;
             scroll-margin-top: 2rem;
         }
 
@@ -113,101 +111,65 @@
             font-size: 1.5rem;
         }
 
-        .content-layout {
+        .image-gallery {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        @media (min-width: 992px) {
-            .content-layout {
-                grid-template-columns: 1.3fr 1fr; /* 圖左文右 */
+        @media (min-width: 768px) {
+            .image-gallery {
+                grid-template-columns: 1fr 1fr; /* J=1 與 J=-1 直接並排對照 */
             }
         }
 
-        /* 切換標籤按鈕樣式 */
-        .tab-container {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            background-color: #eee;
-            border: none;
-            padding: 0.5rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #666;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-            background-color: #ddd;
-        }
-
-        .tab-btn.active {
-            background-color: var(--accent-color);
-            color: white;
-            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
-        }
-
-        /* 圖片顯示控制 */
-        .tab-img {
-            display: none;
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .tab-img.active {
-            display: block;
-        }
-
-        .image-container {
-            display: flex;
-            flex-direction: column;
+        .image-box {
             background: #fafafa;
             border: 1px solid #eee;
             border-radius: 6px;
             padding: 1rem;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
         }
 
-        .image-caption {
-            margin-top: 0.75rem;
-            font-size: 0.85rem;
-            color: #666;
-            text-align: center;
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
         }
 
-        /* 文字解析 */
-        .text-analysis h4 {
-            margin: 1rem 0 0.25rem 0;
+        .image-label {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
             color: var(--secondary-color);
-            font-size: 1.05rem;
+        }
+
+        .text-analysis h4 {
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 0.25rem;
         }
 
         .text-analysis p, .text-analysis ul {
             margin: 0 0 1rem 0;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: #444;
         }
 
         .text-analysis ul {
-            padding-left: 1.2rem;
+            padding-left: 1.5rem;
         }
 
         .text-analysis li {
             margin-bottom: 0.5rem;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .container {
                 grid-template-columns: 1fr;
             }
@@ -229,7 +191,7 @@
         <nav>
             <h3>物理量導覽</h3>
             <ul>
-                <li><a href="#magnetization">A. 磁化強度</a></li>
+                <li><a href="#magnetization">A. 磁化強度曲線</a></li>
                 <li><a href="#susceptibility">B. 磁化率曲線</a></li>
                 <li><a href="#specific-heat">C. 比熱曲線</a></li>
                 <li><a href="#binder">D. Binder 累積量</a></li>
@@ -241,159 +203,166 @@
             
             <section id="magnetization" class="section-card">
                 <h2 class="section-title">A. 磁化強度曲線 (Magnetization)</h2>
-                <div class="content-layout">
-                    <div class="image-container">
-                        <div class="tab-container">
-                            <button class="tab-btn active" onclick="switchTab(this, 'mag-j1')">J = 1 (鐵磁)</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'mag-j1-neg')">J = -1 (反鐵磁)</button>
-                        </div>
-                        <img id="mag-j1" class="tab-img active" src="mag_j1.png" alt="磁化強度 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Magnetization+J%3D1';">
-                        <img id="mag-j1-neg" class="tab-img" src="mag_j1_neg.png" alt="磁化強度 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Magnetization+J%3D-1';">
-                        <div class="image-caption">圖 1：平均每自旋磁化強度隨溫度的變化關係</div>
+                
+                <div class="image-gallery">
+                    <div class="image-box">
+                        <img src="mag_j1.png" alt="Magnetization J=1">
+                        <div class="image-label">鐵磁系統 ($J = 1$)</div>
                     </div>
-                    <div class="text-analysis">
-                        <h4>物理意義</h4>
-                        <p>磁化強度是相變的序參數（Order Parameter）。它描述了系統從「微觀有序（低溫）」走向「微觀無序（高溫）」的轉變過程。</p>
-                        <h4>軸向代表</h4>
-                        <p>橫軸為溫度 \(Temperature (J/k_B)\)；縱軸為平均每自旋的磁化量（\(J=1\) 為絕對磁化強度，\(J=-1\) 為交錯磁化強度）。</p>
-                        <h4>數據趨勢解析</h4>
-                        <ul>
-                          <li>在低溫區 (\(T < T_c\))，自旋受耦合能 \(J\) 主導，呈現鐵磁（或反鐵磁）自發對齊，磁化強度接近飽和值 \(1\)。</li>
-                          <li>當溫度逼近 \(T_c \approx 2.269\) 時，曲線急遽下滑。這是環境熱擾動（\(k_B T\)）開始對抗自旋間有序耦合的結果。</li>
-                          <li>在高溫區 (\(T > T_c\))，熱擾動完全主導，自旋雜亂無章，磁化強度趨近於 \(0\)。</li>
-                        </ul>
-                        <h4>尺寸效應與升降溫</h4>
-                        <p>晶格尺寸 \(L\) 越大，曲線在 \(T_c\) 處的下跌越陡峭。同時加熱與降溫曲線近乎完全重合，說明二維伊辛模型相變屬於連續相變（二級相變），系統沒有顯著的「滯後現象（Hysteresis）」。</p>
+                    <div class="image-box">
+                        <img src="mag_j1_neg.png" alt="Magnetization J=-1">
+                        <div class="image-label">反鐵磁系統 ($J = -1$)</div>
                     </div>
+                </div>
+
+                <div class="text-analysis">
+                    <h4>物理意義</h4>
+                    <p>磁化強度是相變的序參數（Order Parameter）。它描述了系統從微觀有序（低溫相）走向微觀無序（高溫相）的對稱性破缺轉變過程。</p>
+                    
+                    <h4>軸向代表</h4>
+                    <p>橫軸為系統度量溫度 $T$（無因次化單位：$J/k_B$）；縱軸為平均每自旋的磁化量。其中在鐵磁系統（$J = 1$）定義為絕對磁化強度 $\langle|M|\rangle$，在反鐵磁系統（$J = -1$）定義為交錯磁化強度 $\langle|M_{\text{stag}}|\rangle$。</p>
+                    
+                    <h4>數據趨勢解析</h4>
+                    <ul>
+                        <li>在低溫區（$T < T_c$），自旋系統受耦合能 $J$ 主導，呈現鐵磁或反鐵磁性的自發對齊排列，使得平均磁化強度逼近飽和值 $1$。</li>
+                        <li>當溫度逼近臨界點 $T_c \approx 2.269$ 時，平均磁化量曲線急遽下跌。此現象說明環境給予系統的熱擾動能量 $k_B T$ 開始足以對抗自旋間的有序耦合能量。</li>
+                        <li>在高溫區（$T > T_c$），熱擾動完全主導系統行為，自旋位向呈現隨機混亂分布，磁化強度在熱力學極限下趨近於 $0$。</li>
+                    </ul>
+                    
+                    <h4>尺寸效應與升降溫</h4>
+                    <p>晶格尺寸 $L$ 越大（例如 $L=64$），曲線在 $T_c$ 處的下跌斜率越陡峭，越逼近真實無窮大體相的連續突變。同時，系統的加熱（Heat）與降溫（Cool）曲線近乎完全重合，這說明二維伊辛模型相變屬於連續相變（二級相變），系統並無顯著的一級相變過冷或過熱不穩定之「滯後現象」（Hysteresis）。</p>
                 </div>
             </section>
 
             <section id="susceptibility" class="section-card">
-                <h2 class="section-title">B. 磁化率曲線 (Susceptibility \(\chi\))</h2>
-                <div class="content-layout">
-                    <div class="image-container">
-                        <div class="tab-container">
-                            <button class="tab-btn active" onclick="switchTab(this, 'sus-j1')">J = 1</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'sus-j1-neg')">J = -1</button>
-                        </div>
-                        <img id="sus-j1" class="tab-img active" src="sus_j1.png" alt="磁化率 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Susceptibility+J%3D1';">
-                        <img id="sus-j1-neg" class="tab-img" src="sus_j1_neg.png" alt="磁化率 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Susceptibility+J%3D-1';">
-                        <div class="image-caption">圖 2：磁化率在臨界點附近的發散與有限尺寸行為</div>
+                <h2 class="section-title">B. 磁化率曲線 (Susceptibility $\chi$)</h2>
+                
+                <div class="image-gallery">
+                    <div class="image-box">
+                        <img src="sus_j1.png" alt="Susceptibility J=1">
+                        <div class="image-label">鐵磁系統 ($J = 1$)</div>
                     </div>
-                    <div class="text-analysis">
-                        <h4>物理意義</h4>
-                        <p>磁化率代表系統自旋對外界微小擾動的無窮小響應。在統計力學中，它直接正比於磁化強度的漲落（Fluctuation）。</p>
-                        <h4>軸向代表</h4>
-                        <p>橫軸為溫度；縱軸為無因次磁化率（\(1/J \text{ per spin}\)）。</p>
-                        <h4>數據趨勢解析</h4>
-                        <ul>
-                          <li>在低溫和高溫極限下，自旋結構相對穩定，漲落極小，因此 \(\chi \to 0\)。</li>
-                          <li>在臨界點 \(T_c\) 附近，曲線爆發性出現尖峰（Peak）。這在物理上稱為臨界漲落（Critical Fluctuations），微小的熱擾動就能讓大範圍的自旋集體翻轉。</li>
-                        </ul>
-                        <h4>有限尺寸縮放</h4>
-                        <p>隨晶格尺寸 \(L\) 從 \(16 \to 32 \to 64\)，尖峰高度顯著攀升，且位置向真實的 \(T_c = 2.269\) 靠攏，符合有限尺寸縮放理論。</p>
+                    <div class="image-box">
+                        <img src="sus_j1_neg.png" alt="Susceptibility J=-1">
+                        <div class="image-label">反鐵磁系統 ($J = -1$)</div>
                     </div>
+                </div>
+
+                <div class="text-analysis">
+                    <h4>物理意義</h4>
+                    <p>磁化率代表系統自旋結構對外界微小微擾磁場的無窮小響應函數。根據漲落耗散定理（Fluctuation-Dissipation Theorem），它直接正比於磁化強度的統計漲落：</p>
+                    <p>$$\chi = \frac{\beta}{N} \left( \langle M^2 \rangle - \langle M \rangle ^2 \right)$$</p>
+                    
+                    <h4>軸向代表</h4>
+                    <p>橫軸為溫度 $T$；縱軸為無因次化磁化率（以每一自旋之 $1/J$ 為單位）。</p>
+                    
+                    <h4>數據趨勢解析</h4>
+                    <ul>
+                        <li>在低溫極限與高溫極限下，自旋微觀結構相對穩定（低溫呈極度有序，高溫呈極度混亂），其統計漲落極小，因此 $\chi \to 0$。</li>
+                        <li>在臨界點 $T_c$ 附近，曲線爆發性地湧現尖峰（Peak）。此特徵在物理上稱為臨界漲落（Critical Fluctuations）——此時系統處於有序與無序相的邊緣，微小的熱擾動即可引發大範圍自旋集團的集體翻轉。</li>
+                    </ul>
+                    
+                    <h4>有限尺寸縮放</h4>
+                    <p>理論上，無限大晶格在臨界點的磁化率會發散至無窮大（$\chi \to \infty$）。自變數模擬圖清楚顯示，隨著晶格尺寸從 $L=16 \to 32 \to 64$，尖峰高度顯著攀升，且尖峰峰值位置逐漸向真實的 Onsager 精確解 $T_c = 2.269$ 靠攏，完全符合有限尺寸縮放理論（Finite-Size Scaling Theory）。</p>
                 </div>
             </section>
 
             <section id="specific-heat" class="section-card">
-                <h2 class="section-title">C. 比熱曲線 (Specific Heat \(C_v\))</h2>
-                <div class="content-layout">
-                    <div class="image-container">
-                        <div class="tab-container">
-                            <button class="tab-btn active" onclick="switchTab(this, 'cv-j1')">J = 1</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'cv-j1-neg')">J = -1</button>
-                        </div>
-                        <img id="cv-j1" class="tab-img active" src="cv_j1.png" alt="比熱 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Specific+Heat+J%3D1';">
-                        <img id="cv-j1-neg" class="tab-img" src="cv_j1_neg.png" alt="比熱 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Specific+Heat+J%3D-1';">
-                        <div class="image-caption">圖 3：比熱隨溫度的變化及其對數發散趨勢</div>
+                <h2 class="section-title">C. 比熱曲線 (Specific Heat $C_v$)</h2>
+                
+                <div class="image-gallery">
+                    <div class="image-box">
+                        <img src="cv_j1.png" alt="Specific Heat J=1">
+                        <div class="image-label">鐵磁系統 ($J = 1$)</div>
                     </div>
-                    <div class="text-analysis">
-                        <h4>物理意義</h4>
-                        <p>比熱代表系統內能隨溫度的變化率，本質上對應於能量的漲落（Energy Fluctuation）。</p>
-                        <h4>軸向代表</h4>
-                        <p>橫軸為溫度；縱軸為單個自旋的比熱貢獻（\(k_B \text{ per spin}\)）。</p>
-                        <h4>數據趨勢解析</h4>
-                        <p>比熱在 \(T_c\) 附近展現出尖峰行為，代表系統在相變點附近需要吸收/釋放大量的能量來破壞/建立微觀有序結構。</p>
-                        <p>隨著 \(L\) 增大，比熱峰值明顯增高。Onsager 精確解指出比熱呈對數發散（Logarithmic Divergence），模擬完美再現了這一趨勢。</p>
+                    <div class="image-box">
+                        <img src="cv_j1_neg.png" alt="Specific Heat J=-1">
+                        <div class="image-label">反鐵磁系統 ($J = -1$)</div>
                     </div>
+                </div>
+
+                <div class="text-analysis">
+                    <h4>物理意義</h4>
+                    <p>比熱代表系統內能隨溫度的變化率，本質上對應於系統總能量的熱力學漲落：</p>
+                    <p>$$C_v = \frac{\beta^2}{N} \left( \langle E^2 \rangle - \langle E \rangle ^2 \right)$$</p>
+                    
+                    <h4>軸向代表</h4>
+                    <p>橫軸為溫度 $T$；縱軸為單個自旋的比熱貢獻（以 $k_B$ 為單位）。</p>
+                    
+                    <h4>數據趨勢解析</h4>
+                    <p>比熱在 $T_c$ 附近同樣展現出尖峰行為，代表系統在相變點附近需要吸收或釋放大量的潛在能量，用以破壞或建立微觀的有序結構（此二級相變並無潛熱，但比熱具有發散特徵）。</p>
+                    <p>隨著晶格尺寸 $L$ 增大，比熱峰值明顯增高。值得注意的是，Onsager 對二維伊辛模型的精確解指出比熱呈對數發散（Logarithmic Divergence）：</p>
+                    <p>$$C_v \sim -\ln |T - T_c|$$</p>
+                    <p>此模擬實驗完美再現了這一隨著晶格擴大、峰值顯著上升的發散趨勢。</p>
                 </div>
             </section>
 
             <section id="binder" class="section-card">
-                <h2 class="section-title">D. Binder 累積量 (Binder Cumulant \(U_4\))</h2>
-                <div class="content-layout">
-                    <div class="image-container">
-                        <div class="tab-container">
-                            <button class="tab-btn active" onclick="switchTab(this, 'binder-j1')">J = 1</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'binder-j1-neg')">J = -1</button>
-                        </div>
-                        <img id="binder-j1" class="tab-img active" src="binder_j1.png" alt="Binder J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Binder+Cumulant+J%3D1';">
-                        <img id="binder-j1-neg" class="tab-img" src="binder_j1_neg.png" alt="Binder J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Binder+Cumulant+J%3D-1';">
-                        <div class="image-caption">圖 4：不同尺寸 Binder 累積量曲線的熱力學不變交點</div>
+                <h2 class="section-title">D. Binder 累積量 (Binder Cumulant $U_4$)</h2>
+                
+                <div class="image-gallery">
+                    <div class="image-box">
+                        <img src="binder_j1.png" alt="Binder Cumulant J=1">
+                        <div class="image-label">鐵磁系統 ($J = 1$)</div>
                     </div>
-                    <div class="text-analysis">
-                        <h4>物理意義</h4>
-                        <p>這是統計物理中用來精確確定臨界溫度 \(T_c\) 最強大的工具。它排除了晶格大小有限帶來的平滑化干擾。</p>
-                        <h4>軸向代表</h4>
-                        <p>橫軸為溫度；縱軸為無因次量 \(U_4\) 的值。</p>
-                        <h4>數據趨勢解析</h4>
-                        <ul>
-                          <li>在低溫高度有序相中，磁化強度分佈接近高斯雙峰（或單峰），\(U_4 \to 2/3 \approx 0.667\)。</li>
-                          <li>在高溫無序相中，磁化強度分佈回歸標準高斯分佈，\(\langle M^4 \rangle = 3 \langle M^2 \rangle^2\)，因此 \(U_4 \to 0\)。</li>
-                        </ul>
-                        <h4>交點的物理真諦</h4>
-                        <p>不論 \(L=16, 32, 64\)，所有曲線在 \(T \approx 2.269\) 附近精準交於一點（約 \(0.61\)）。這個絕妙的交點宣告了真實臨界溫度 \(T_c\) 的存在，證明代碼與 Jackknife 誤差線非常精確。</p>
+                    <div class="image-box">
+                        <img src="binder_j1_neg.png" alt="Binder Cumulant J=-1">
+                        <div class="image-label">反鐵磁系統 ($J = -1$)</div>
                     </div>
+                </div>
+
+                <div class="text-analysis">
+                    <h4>物理意義</h4>
+                    <p>這是統計物理中用來精確判定臨界溫度 $T_c$ 最強大的有限尺寸不變量工具。其數學定義為：</p>
+                    <p>$$U_4 = 1 - \frac{\langle M^4 \rangle}{3 \langle M^2 \rangle^2}$$</p>
+                    <p>它能有效排除晶格大小有限帶來的尖峰平滑化與平移干擾。</p>
+                    
+                    <h4>軸向代表</h4>
+                    <p>橫軸為溫度 $T$；縱軸為無因次量 $U_4$ 的數值。</p>
+                    
+                    <h4>數據趨勢解析</h4>
+                    <ul>
+                        <li>在低溫高度有序相中，磁化強度的機率分布接近高斯雙峰分布，使得四階矩與二階矩滿足 $\frac{\langle M^4 \rangle}{\langle M^2 \rangle^2} \to 1$，因此 $U_4 \to 1 - \frac{1}{3} = \frac{2}{3} \approx 0.667$。</li>
+                        <li>在高溫無序相中，根據中心極限定理，磁化強度分佈回歸標準中心高斯分佈，其高階矩滿足 $\langle M^4 \rangle = 3 \langle M^2 \rangle^2$，因此 $U_4 \to 0$。</li>
+                    </ul>
+                    
+                    <h4>交點的物理真諦</h4>
+                    <p>圖中不論晶格尺寸 $L = 16, 32, 64$，所有尺寸的曲線在 $T \approx 2.269$ 附近精準交會於一點（數值約為 $0.61$）。這個絕妙的交點正是熱力學尺度不變點，明確宣告了真實臨界溫度 $T_c$ 的存在。這證明你的代碼與 Jackknife 誤差線非常精確。</p>
                 </div>
             </section>
 
             <section id="autocorrelation" class="section-card">
-                <h2 class="section-title">E. 自相關時間曲線 (Autocorrelation Time \(\tau\))</h2>
-                <div class="content-layout">
-                    <div class="image-container">
-                        <div class="tab-container">
-                            <button class="tab-btn active" onclick="switchTab(this, 'tau-j1')">J = 1</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'tau-j1-neg')">J = -1</button>
-                        </div>
-                        <img id="tau-j1" class="tab-img active" src="tau_j1.png" alt="自相關時間 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Autocorrelation+J%3D1';">
-                        <img id="tau-j1-neg" class="tab-img" src="tau_j1_neg.png" alt="自相關時間 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Autocorrelation+J%3D-1';">
-                        <div class="image-caption">圖 5：臨界點附近的臨界變慢現象與統計雜訊</div>
+                <h2 class="section-title">E. 自相關時間曲線 (Autocorrelation Time $\tau$)</h2>
+                
+                <div class="image-gallery">
+                    <div class="image-box">
+                        <img src="tau_j1.png" alt="Autocorrelation Time J=1">
+                        <div class="image-label">鐵磁系統 ($J = 1$)</div>
                     </div>
-                    <div class="text-analysis">
-                        <h4>物理意義</h4>
-                        <p>描述連續兩個 MCMC 抽樣點之間互相遺忘、達成獨立所需的時間（步數）。</p>
-                        <h4>軸向代表</h4>
-                        <p>橫軸為溫度；縱軸為 MCMC 步數（\(mcmc \text{ steps}\)）。</p>
-                        <h4>數據趨勢解析</h4>
-                        <p>在外圍溫度，\(\tau\) 非常小（\(< 20\) 步），數據很快就失去相關性。但在 \(T_c\) 附近，\(\tau\) 劇烈飆升（稱為<strong>臨界變慢 Critical Slowing Down</strong>）。相變時相關長度發散，微觀自旋集團需要極長時間才能更新。</p>
-                        <h4>圖形鋸齒波動成因</h4>
-                        <p>臨界變慢使得數據高度相關，導致 \(\tau\) 的估算產生較大的統計噪聲（鋸齒狀波動）。這正是代碼中引入動態 thinning 與 Jackknife 誤差估計的最核心用意。</p>
+                    <div class="image-box">
+                        <img src="tau_j1_neg.png" alt="Autocorrelation Time J=-1">
+                        <div class="image-label">反鐵磁系統 ($J = -1$)</div>
                     </div>
+                </div>
+
+                <div class="text-analysis">
+                    <h4>物理意義</h4>
+                    <p>描述馬可夫鏈蒙地卡羅（MCMC）隨機抽樣過程中，連續兩個採樣點之間互相遺忘、達成統計獨立所需的鬆弛時間或步數。</p>
+                    
+                    <h4>軸向代表</h4>
+                    <p>橫軸為溫度 $T$；縱軸為馬可夫鏈時間步數（$\text{MCMC steps}$）。</p>
+                    
+                    <h4>數據趨勢解析</h4>
+                    <p>在外圍溫度區域（極高溫或極低溫），自相關時間 $\tau$ 非常小（$\tau < 20$），說明自旋翻轉或系統動態極快，數據序列迅速失去相關性。</p>
+                    <p>但在臨界點 $T_c$ 附近，$\tau$ 呈劇烈爆發性飆升（特別是在 $L=64$ 的晶格系統中達到最大峰值）。這在數值計算物理中被稱為<strong>臨界變慢現象（Critical Slowing Down）</strong>。隨著相變點逼近，系統的微觀空間相關長度 $\xi$ 發散，導致宏觀自旋集團更新速度極度緩慢，滿足冪次法則規律：$\tau \sim \xi^z \sim |T - T_c|^{-yz}$。</p>
+                    
+                    <h4>圖形鋸齒波動成因</h4>
+                    <p>臨界變慢現象使得採樣數據在時間序列上高度相關，一般的方差估算公式在此處將會失效，導致 $\tau$ 的數值估算產生較大的統計雜訊與鋸齒狀波動。這也正是演算法中必須引入動態 thinning（稀疏採樣間隔）與 Jackknife 誤差估計法最核心的物理用意（若不採用此方法，臨界點附近的熱力學量誤差會被嚴重低估）。</p>
                 </div>
             </section>
 
         </main>
     </div>
 
-    <script>
-        function switchTab(button, imgId) {
-            // 找到該按鈕所屬的切換容器與核心卡片區塊
-            const container = button.parentElement;
-            const card = container.parentElement;
-            
-            // 取消該區塊內所有按鈕的 active 狀態
-            const buttons = container.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // 取消該區塊內所有圖片的 active 狀態
-            const images = card.querySelectorAll('.tab-img');
-            images.forEach(img => img.classList.remove('active'));
-            
-            // 激活當前被點擊的按鈕與對應圖片
-            button.classList.add('active');
-            document.getElementById(imgId).classList.add('active');
-        }
-    </script>
 </body>
 </html>
