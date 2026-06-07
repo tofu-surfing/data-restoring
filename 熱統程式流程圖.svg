@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="909pt" height="728pt" viewBox="0.00 0.00 909.00 728.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 724.23)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-724.23 904.91,-724.23 904.91,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_T_loop</title>
+<polygon fill="none" stroke="blue" points="260.41,-8 260.41,-712.23 520.41,-712.23 520.41,-8 260.41,-8"/>
+<text xml:space="preserve" text-anchor="middle" x="390.41" y="-695.63" font-family="Helvetica,Arial,sans-serif" font-size="14.00">溫度掃描迴圈 (Temperature Sweep)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_MCMC</title>
+<polygon fill="none" stroke="green" points="300.41,-499.62 300.41,-679.43 512.41,-679.43 512.41,-499.62 300.41,-499.62"/>
+<text xml:space="preserve" text-anchor="middle" x="406.41" y="-662.83" font-family="Helvetica,Arial,sans-serif" font-size="14.00">數據採樣迴圈 (data_samples=3000)</text>
+</g>
+<!-- Start -->
+<g id="node1" class="node">
+<title>Start</title>
+<ellipse fill="lightblue" stroke="black" cx="126.41" cy="-528.42" rx="126.41" ry="29.42"/>
+<text xml:space="preserve" text-anchor="middle" x="126.41" y="-532.62" font-family="Helvetica,Arial,sans-serif" font-size="14.00">開始模擬</text>
+<text xml:space="preserve" text-anchor="middle" x="126.41" y="-515.82" font-family="Helvetica,Arial,sans-serif" font-size="14.00">(設定 L=16, 32, 64 與 J=1, -1)</text>
+</g>
+<!-- InitLattice -->
+<g id="node2" class="node">
+<title>InitLattice</title>
+<polygon fill="lightgrey" stroke="black" points="235.8,-446.2 51.03,-446.2 51.03,-387.8 235.8,-387.8 235.8,-446.2"/>
+<text xml:space="preserve" text-anchor="middle" x="143.41" y="-429.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00">初始化晶格 Lattice</text>
+<text xml:space="preserve" text-anchor="middle" x="143.41" y="-412.8" font-family="Helvetica,Arial,sans-serif" font-size="14.00">Heating: 鐵磁全+1 / 反鐵磁交錯</text>
+<text xml:space="preserve" text-anchor="middle" x="143.41" y="-396" font-family="Helvetica,Arial,sans-serif" font-size="14.00">Cooling: 隨機熱啟動 (Hot Start)</text>
+</g>
+<!-- Start&#45;&gt;InitLattice -->
+<g id="edge1" class="edge">
+<title>Start-&gt;InitLattice</title>
+<path fill="none" stroke="black" d="M130.88,-498.67C132.83,-486.1 135.15,-471.16 137.27,-457.57"/>
+<polygon fill="black" stroke="black" points="140.67,-458.47 138.75,-448.05 133.75,-457.4 140.67,-458.47"/>
+</g>
+<!-- Equil -->
+<g id="node3" class="node">
+<title>Equil</title>
+<polygon fill="lightgrey" stroke="black" points="473.37,-314.2 287.46,-314.2 287.46,-272.6 473.37,-272.6 473.37,-314.2"/>
+<text xml:space="preserve" text-anchor="middle" x="380.41" y="-297.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00">基礎熱平衡 (Base Equilibration)</text>
+<text xml:space="preserve" text-anchor="middle" x="380.41" y="-280.8" font-family="Helvetica,Arial,sans-serif" font-size="14.00">跑 base_eq=2000 步 MCMC</text>
+</g>
+<!-- InitLattice&#45;&gt;Equil -->
+<g id="edge2" class="edge">
+<title>InitLattice-&gt;Equil</title>
+<path fill="none" stroke="black" d="M199.28,-387.34C239.35,-366.78 292.84,-339.33 331.29,-319.61"/>
+<polygon fill="black" stroke="black" points="332.57,-322.88 339.87,-315.2 329.37,-316.66 332.57,-322.88"/>
+</g>
+<!-- CalcTau -->
+<g id="node4" class="node">
+<title>CalcTau</title>
+<polygon fill="lightgrey" stroke="black" points="492.42,-214.8 268.41,-214.8 268.41,-173.2 492.42,-173.2 492.42,-214.8"/>
+<text xml:space="preserve" text-anchor="middle" x="380.41" y="-198.2" font-family="Helvetica,Arial,sans-serif" font-size="14.00">計算自相關時間 (Autocorrelation Time)</text>
+<text xml:space="preserve" text-anchor="middle" x="380.41" y="-181.4" font-family="Helvetica,Arial,sans-serif" font-size="14.00">利用 cal_tau() 計算時間常數 τ</text>
+</g>
+<!-- Equil&#45;&gt;CalcTau -->
+<g id="edge3" class="edge">
+<title>Equil-&gt;CalcTau</title>
+<path fill="none" stroke="black" d="M380.41,-272.22C380.41,-259.03 380.41,-241.53 380.41,-226.52"/>
+<polygon fill="black" stroke="black" points="383.91,-226.67 380.41,-216.67 376.91,-226.67 383.91,-226.67"/>
+</g>
+<!-- Thinning -->
+<g id="node5" class="node">
+<title>Thinning</title>
+<polygon fill="lightgrey" stroke="black" points="480.79,-136.2 306.04,-136.2 306.04,-94.6 480.79,-94.6 480.79,-136.2"/>
+<text xml:space="preserve" text-anchor="middle" x="393.41" y="-119.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00">動態採樣間隔設定</text>
+<text xml:space="preserve" text-anchor="middle" x="393.41" y="-102.8" font-family="Helvetica,Arial,sans-serif" font-size="14.00">Thinning = max(1, int(2*τ))</text>
+</g>
+<!-- CalcTau&#45;&gt;Thinning -->
+<g id="edge4" class="edge">
+<title>CalcTau-&gt;Thinning</title>
+<path fill="none" stroke="black" d="M383.83,-172.87C385.13,-165.19 386.65,-156.25 388.09,-147.77"/>
+<polygon fill="black" stroke="black" points="391.5,-148.59 389.72,-138.15 384.6,-147.42 391.5,-148.59"/>
+</g>
+<!-- BurnIn -->
+<g id="node6" class="node">
+<title>BurnIn</title>
+<polygon fill="lightgrey" stroke="black" points="496.91,-57.6 319.91,-57.6 319.91,-16 496.91,-16 496.91,-57.6"/>
+<text xml:space="preserve" text-anchor="middle" x="408.41" y="-41" font-family="Helvetica,Arial,sans-serif" font-size="14.00">二次燒入 (Burn-In)</text>
+<text xml:space="preserve" text-anchor="middle" x="408.41" y="-24.2" font-family="Helvetica,Arial,sans-serif" font-size="14.00">跑 10*τ 步徹底消除前一溫度記憶</text>
+</g>
+<!-- Thinning&#45;&gt;BurnIn -->
+<g id="edge5" class="edge">
+<title>Thinning-&gt;BurnIn</title>
+<path fill="none" stroke="black" d="M397.36,-94.27C398.86,-86.59 400.61,-77.65 402.27,-69.17"/>
+<polygon fill="black" stroke="black" points="405.67,-70.03 404.16,-59.54 398.8,-68.68 405.67,-70.03"/>
+</g>
+<!-- Sample -->
+<g id="node7" class="node">
+<title>Sample</title>
+<polygon fill="lightgrey" stroke="black" points="504.05,-646.63 308.78,-646.63 308.78,-610.63 504.05,-610.63 504.05,-646.63"/>
+<text xml:space="preserve" text-anchor="middle" x="406.41" y="-624.43" font-family="Helvetica,Arial,sans-serif" font-size="14.00">執行 Thinning 步 Metropolis 翻轉</text>
+</g>
+<!-- BurnIn&#45;&gt;Sample -->
+<g id="edge6" class="edge">
+<title>BurnIn-&gt;Sample</title>
+<path fill="none" stroke="black" d="M466.54,-57.96C489.9,-70.09 511.41,-88.33 511.41,-114.4 511.41,-529.42 511.41,-529.42 511.41,-529.42 511.41,-562.65 483.01,-587.88 455.75,-604.45"/>
+<polygon fill="black" stroke="black" points="454.05,-601.38 447.12,-609.4 457.54,-607.45 454.05,-601.38"/>
+</g>
+<!-- Measure -->
+<g id="node8" class="node">
+<title>Measure</title>
+<polygon fill="lightgrey" stroke="black" points="470.53,-549.22 308.3,-549.22 308.3,-507.62 470.53,-507.62 470.53,-549.22"/>
+<text xml:space="preserve" text-anchor="middle" x="389.41" y="-532.62" font-family="Helvetica,Arial,sans-serif" font-size="14.00">計算該步之 M 與 E</text>
+<text xml:space="preserve" text-anchor="middle" x="389.41" y="-515.82" font-family="Helvetica,Arial,sans-serif" font-size="14.00">(反鐵磁計算交錯磁化強度 Ms)</text>
+</g>
+<!-- Sample&#45;&gt;Measure -->
+<g id="edge7" class="edge">
+<title>Sample-&gt;Measure</title>
+<path fill="none" stroke="black" d="M396.8,-610.32C394.22,-604.83 391.77,-598.63 390.41,-592.63 388.12,-582.47 387.39,-571.16 387.38,-560.95"/>
+<polygon fill="black" stroke="black" points="390.87,-561.19 387.61,-551.11 383.87,-561.02 390.87,-561.19"/>
+</g>
+<!-- Measure&#45;&gt;Sample -->
+<g id="edge8" class="edge">
+<title>Measure-&gt;Sample</title>
+<path fill="none" stroke="black" d="M392.87,-549.37C395.37,-563.84 398.79,-583.59 401.57,-599.63"/>
+<polygon fill="black" stroke="black" points="398.04,-599.78 403.2,-609.03 404.94,-598.58 398.04,-599.78"/>
+<text xml:space="preserve" text-anchor="middle" x="429.69" y="-580.03" font-family="Helvetica,Arial,sans-serif" font-size="14.00">未滿3000點</text>
+</g>
+<!-- CalcStats -->
+<g id="node9" class="node">
+<title>CalcStats</title>
+<polygon fill="lightgrey" stroke="black" points="492.86,-446.2 283.97,-446.2 283.97,-387.8 492.86,-387.8 492.86,-446.2"/>
+<text xml:space="preserve" text-anchor="middle" x="388.41" y="-429.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00">統計量計算</text>
+<text xml:space="preserve" text-anchor="middle" x="388.41" y="-412.8" font-family="Helvetica,Arial,sans-serif" font-size="14.00">計算平均值、漲落(方差)得到 Cv 與 Chi</text>
+<text xml:space="preserve" text-anchor="middle" x="388.41" y="-396" font-family="Helvetica,Arial,sans-serif" font-size="14.00">利用 Jackknife 算法計算 U4 及其誤差</text>
+</g>
+<!-- Measure&#45;&gt;CalcStats -->
+<g id="edge9" class="edge">
+<title>Measure-&gt;CalcStats</title>
+<path fill="none" stroke="black" d="M389.23,-507.35C389.1,-493.51 388.93,-474.66 388.78,-457.83"/>
+<polygon fill="black" stroke="black" points="392.28,-458.08 388.69,-448.11 385.28,-458.14 392.28,-458.08"/>
+<text xml:space="preserve" text-anchor="middle" x="409.97" y="-468.4" font-family="Helvetica,Arial,sans-serif" font-size="14.00">採樣完成</text>
+</g>
+<!-- CalcStats&#45;&gt;Equil -->
+<g id="edge10" class="edge">
+<title>CalcStats-&gt;Equil</title>
+<path fill="none" stroke="black" d="M386.54,-387.49C385.32,-368.98 383.73,-344.83 382.48,-325.77"/>
+<polygon fill="black" stroke="black" points="385.98,-325.64 381.83,-315.89 378.99,-326.1 385.98,-325.64"/>
+<text xml:space="preserve" text-anchor="middle" x="416.87" y="-357.2" font-family="Helvetica,Arial,sans-serif" font-size="14.00">下一個溫度點</text>
+</g>
+<!-- Plot -->
+<g id="node10" class="node">
+<title>Plot</title>
+<polygon fill="lightyellow" stroke="black" points="900.91,-335 605.83,-335 529.92,-251.8 825,-251.8 900.91,-335"/>
+<text xml:space="preserve" text-anchor="middle" x="715.41" y="-297.6" font-family="Helvetica,Arial,sans-serif" font-size="14.00">繪製熱力學曲線圖</text>
+<text xml:space="preserve" text-anchor="middle" x="715.41" y="-280.8" font-family="Helvetica,Arial,sans-serif" font-size="14.00">(比較不同 L 與 Heat/Cool 走向)</text>
+</g>
+<!-- CalcStats&#45;&gt;Plot -->
+<g id="edge11" class="edge">
+<title>CalcStats-&gt;Plot</title>
+<path fill="none" stroke="black" d="M465.5,-387.34C504.05,-373 551.59,-355.32 594.83,-339.24"/>
+<polygon fill="black" stroke="black" points="595.86,-342.59 604.01,-335.83 593.42,-336.03 595.86,-342.59"/>
+<text xml:space="preserve" text-anchor="middle" x="599.16" y="-357.2" font-family="Helvetica,Arial,sans-serif" font-size="14.00">所有溫度點掃描完畢</text>
+</g>
+<!-- End -->
+<g id="node11" class="node">
+<title>End</title>
+<ellipse fill="lightblue" stroke="black" cx="715.41" cy="-194" rx="76.22" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="715.41" y="-189.8" font-family="Helvetica,Arial,sans-serif" font-size="14.00">結束並分析物理意義</text>
+</g>
+<!-- Plot&#45;&gt;End -->
+<g id="edge12" class="edge">
+<title>Plot-&gt;End</title>
+<path fill="none" stroke="black" d="M715.41,-251.38C715.41,-242.05 715.41,-232.33 715.41,-223.65"/>
+<polygon fill="black" stroke="black" points="718.91,-223.72 715.41,-213.72 711.91,-223.72 718.91,-223.72"/>
+</g>
+</g>
+</svg>
