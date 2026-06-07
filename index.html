@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二維伊辛模型 (2D Ising Model) 模擬結果與物理模擬解析</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/node/shapes/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        /* 側邊導覽列 */
+        nav {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        nav h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav li {
+            margin-bottom: 0.75rem;
+        }
+
+        nav a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 主要內容區 */
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 2rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 0.75rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            .content-layout {
+                grid-template-columns: 1.3fr 1fr; /* 圖左文右 */
+            }
+        }
+
+        /* 切換標籤按鈕樣式 */
+        .tab-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background-color: #eee;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #666;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: #ddd;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+        }
+
+        /* 圖片顯示控制 */
+        .tab-img {
+            display: none;
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab-img.active {
+            display: block;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 1rem;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .image-caption {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+
+        /* 文字解析 */
+        .text-analysis h4 {
+            margin: 1rem 0 0.25rem 0;
+            color: var(--secondary-color);
+            font-size: 1.05rem;
+        }
+
+        .text-analysis p, .text-analysis ul {
+            margin: 0 0 1rem 0;
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .text-analysis ul {
+            padding-left: 1.2rem;
+        }
+
+        .text-analysis li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            nav {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>二維伊辛模型 (2D Ising Model)</h1>
+        <p>相變熱力學量與馬可夫鏈蒙地卡羅 (MCMC) 模擬結果學術解析報告</p>
+    </header>
+
+    <div class="container">
+        <nav>
+            <h3>物理量導覽</h3>
+            <ul>
+                <li><a href="#magnetization">A. 磁化強度</a></li>
+                <li><a href="#susceptibility">B. 磁化率曲線</a></li>
+                <li><a href="#specific-heat">C. 比熱曲線</a></li>
+                <li><a href="#binder">D. Binder 累積量</a></li>
+                <li><a href="#autocorrelation">E. 自相關時間</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            
+            <section id="magnetization" class="section-card">
+                <h2 class="section-title">A. 磁化強度曲線 (Magnetization)</h2>
+                <div class="content-layout">
+                    <div class="image-container">
+                        <div class="tab-container">
+                            <button class="tab-btn active" onclick="switchTab(this, 'mag-j1')">J = 1 (鐵磁)</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'mag-j1-neg')">J = -1 (反鐵磁)</button>
+                        </div>
+                        <img id="mag-j1" class="tab-img active" src="mag_j1.png" alt="磁化強度 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Magnetization+J%3D1';">
+                        <img id="mag-j1-neg" class="tab-img" src="mag_j1_neg.png" alt="磁化強度 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Magnetization+J%3D-1';">
+                        <div class="image-caption">圖 1：平均每自旋磁化強度隨溫度的變化關係</div>
+                    </div>
+                    <div class="text-analysis">
+                        <h4>物理意義</h4>
+                        <p>磁化強度是相變的序參數（Order Parameter）。它描述了系統從「微觀有序（低溫）」走向「微觀無序（高溫）」的轉變過程。</p>
+                        <h4>軸向代表</h4>
+                        <p>橫軸為溫度 \(Temperature (J/k_B)\)；縱軸為平均每自旋的磁化量（\(J=1\) 為絕對磁化強度，\(J=-1\) 為交錯磁化強度）。</p>
+                        <h4>數據趨勢解析</h4>
+                        <ul>
+                          <li>在低溫區 (\(T < T_c\))，自旋受耦合能 \(J\) 主導，呈現鐵磁（或反鐵磁）自發對齊，磁化強度接近飽和值 \(1\)。</li>
+                          <li>當溫度逼近 \(T_c \approx 2.269\) 時，曲線急遽下滑。這是環境熱擾動（\(k_B T\)）開始對抗自旋間有序耦合的結果。</li>
+                          <li>在高溫區 (\(T > T_c\))，熱擾動完全主導，自旋雜亂無章，磁化強度趨近於 \(0\)。</li>
+                        </ul>
+                        <h4>尺寸效應與升降溫</h4>
+                        <p>晶格尺寸 \(L\) 越大，曲線在 \(T_c\) 處的下跌越陡峭。同時加熱與降溫曲線近乎完全重合，說明二維伊辛模型相變屬於連續相變（二級相變），系統沒有顯著的「滯後現象（Hysteresis）」。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="susceptibility" class="section-card">
+                <h2 class="section-title">B. 磁化率曲線 (Susceptibility \(\chi\))</h2>
+                <div class="content-layout">
+                    <div class="image-container">
+                        <div class="tab-container">
+                            <button class="tab-btn active" onclick="switchTab(this, 'sus-j1')">J = 1</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'sus-j1-neg')">J = -1</button>
+                        </div>
+                        <img id="sus-j1" class="tab-img active" src="sus_j1.png" alt="磁化率 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Susceptibility+J%3D1';">
+                        <img id="sus-j1-neg" class="tab-img" src="sus_j1_neg.png" alt="磁化率 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Susceptibility+J%3D-1';">
+                        <div class="image-caption">圖 2：磁化率在臨界點附近的發散與有限尺寸行為</div>
+                    </div>
+                    <div class="text-analysis">
+                        <h4>物理意義</h4>
+                        <p>磁化率代表系統自旋對外界微小擾動的無窮小響應。在統計力學中，它直接正比於磁化強度的漲落（Fluctuation）。</p>
+                        <h4>軸向代表</h4>
+                        <p>橫軸為溫度；縱軸為無因次磁化率（\(1/J \text{ per spin}\)）。</p>
+                        <h4>數據趨勢解析</h4>
+                        <ul>
+                          <li>在低溫和高溫極限下，自旋結構相對穩定，漲落極小，因此 \(\chi \to 0\)。</li>
+                          <li>在臨界點 \(T_c\) 附近，曲線爆發性出現尖峰（Peak）。這在物理上稱為臨界漲落（Critical Fluctuations），微小的熱擾動就能讓大範圍的自旋集體翻轉。</li>
+                        </ul>
+                        <h4>有限尺寸縮放</h4>
+                        <p>隨晶格尺寸 \(L\) 從 \(16 \to 32 \to 64\)，尖峰高度顯著攀升，且位置向真實的 \(T_c = 2.269\) 靠攏，符合有限尺寸縮放理論。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="specific-heat" class="section-card">
+                <h2 class="section-title">C. 比熱曲線 (Specific Heat \(C_v\))</h2>
+                <div class="content-layout">
+                    <div class="image-container">
+                        <div class="tab-container">
+                            <button class="tab-btn active" onclick="switchTab(this, 'cv-j1')">J = 1</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'cv-j1-neg')">J = -1</button>
+                        </div>
+                        <img id="cv-j1" class="tab-img active" src="cv_j1.png" alt="比熱 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Specific+Heat+J%3D1';">
+                        <img id="cv-j1-neg" class="tab-img" src="cv_j1_neg.png" alt="比熱 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Specific+Heat+J%3D-1';">
+                        <div class="image-caption">圖 3：比熱隨溫度的變化及其對數發散趨勢</div>
+                    </div>
+                    <div class="text-analysis">
+                        <h4>物理意義</h4>
+                        <p>比熱代表系統內能隨溫度的變化率，本質上對應於能量的漲落（Energy Fluctuation）。</p>
+                        <h4>軸向代表</h4>
+                        <p>橫軸為溫度；縱軸為單個自旋的比熱貢獻（\(k_B \text{ per spin}\)）。</p>
+                        <h4>數據趨勢解析</h4>
+                        <p>比熱在 \(T_c\) 附近展現出尖峰行為，代表系統在相變點附近需要吸收/釋放大量的能量來破壞/建立微觀有序結構。</p>
+                        <p>隨著 \(L\) 增大，比熱峰值明顯增高。Onsager 精確解指出比熱呈對數發散（Logarithmic Divergence），模擬完美再現了這一趨勢。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="binder" class="section-card">
+                <h2 class="section-title">D. Binder 累積量 (Binder Cumulant \(U_4\))</h2>
+                <div class="content-layout">
+                    <div class="image-container">
+                        <div class="tab-container">
+                            <button class="tab-btn active" onclick="switchTab(this, 'binder-j1')">J = 1</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'binder-j1-neg')">J = -1</button>
+                        </div>
+                        <img id="binder-j1" class="tab-img active" src="binder_j1.png" alt="Binder J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Binder+Cumulant+J%3D1';">
+                        <img id="binder-j1-neg" class="tab-img" src="binder_j1_neg.png" alt="Binder J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Binder+Cumulant+J%3D-1';">
+                        <div class="image-caption">圖 4：不同尺寸 Binder 累積量曲線的熱力學不變交點</div>
+                    </div>
+                    <div class="text-analysis">
+                        <h4>物理意義</h4>
+                        <p>這是統計物理中用來精確確定臨界溫度 \(T_c\) 最強大的工具。它排除了晶格大小有限帶來的平滑化干擾。</p>
+                        <h4>軸向代表</h4>
+                        <p>橫軸為溫度；縱軸為無因次量 \(U_4\) 的值。</p>
+                        <h4>數據趨勢解析</h4>
+                        <ul>
+                          <li>在低溫高度有序相中，磁化強度分佈接近高斯雙峰（或單峰），\(U_4 \to 2/3 \approx 0.667\)。</li>
+                          <li>在高溫無序相中，磁化強度分佈回歸標準高斯分佈，\(\langle M^4 \rangle = 3 \langle M^2 \rangle^2\)，因此 \(U_4 \to 0\)。</li>
+                        </ul>
+                        <h4>交點的物理真諦</h4>
+                        <p>不論 \(L=16, 32, 64\)，所有曲線在 \(T \approx 2.269\) 附近精準交於一點（約 \(0.61\)）。這個絕妙的交點宣告了真實臨界溫度 \(T_c\) 的存在，證明代碼與 Jackknife 誤差線非常精確。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="autocorrelation" class="section-card">
+                <h2 class="section-title">E. 自相關時間曲線 (Autocorrelation Time \(\tau\))</h2>
+                <div class="content-layout">
+                    <div class="image-container">
+                        <div class="tab-container">
+                            <button class="tab-btn active" onclick="switchTab(this, 'tau-j1')">J = 1</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'tau-j1-neg')">J = -1</button>
+                        </div>
+                        <img id="tau-j1" class="tab-img active" src="tau_j1.png" alt="自相關時間 J=1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Autocorrelation+J%3D1';">
+                        <img id="tau-j1-neg" class="tab-img" src="tau_j1_neg.png" alt="自相關時間 J=-1" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Autocorrelation+J%3D-1';">
+                        <div class="image-caption">圖 5：臨界點附近的臨界變慢現象與統計雜訊</div>
+                    </div>
+                    <div class="text-analysis">
+                        <h4>物理意義</h4>
+                        <p>描述連續兩個 MCMC 抽樣點之間互相遺忘、達成獨立所需的時間（步數）。</p>
+                        <h4>軸向代表</h4>
+                        <p>橫軸為溫度；縱軸為 MCMC 步數（\(mcmc \text{ steps}\)）。</p>
+                        <h4>數據趨勢解析</h4>
+                        <p>在外圍溫度，\(\tau\) 非常小（\(< 20\) 步），數據很快就失去相關性。但在 \(T_c\) 附近，\(\tau\) 劇烈飆升（稱為<strong>臨界變慢 Critical Slowing Down</strong>）。相變時相關長度發散，微觀自旋集團需要極長時間才能更新。</p>
+                        <h4>圖形鋸齒波動成因</h4>
+                        <p>臨界變慢使得數據高度相關，導致 \(\tau\) 的估算產生較大的統計噪聲（鋸齒狀波動）。這正是代碼中引入動態 thinning 與 Jackknife 誤差估計的最核心用意。</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function switchTab(button, imgId) {
+            // 找到該按鈕所屬的切換容器與核心卡片區塊
+            const container = button.parentElement;
+            const card = container.parentElement;
+            
+            // 取消該區塊內所有按鈕的 active 狀態
+            const buttons = container.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // 取消該區塊內所有圖片的 active 狀態
+            const images = card.querySelectorAll('.tab-img');
+            images.forEach(img => img.classList.remove('active'));
+            
+            // 激活當前被點擊的按鈕與對應圖片
+            button.classList.add('active');
+            document.getElementById(imgId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
